@@ -18,7 +18,7 @@ pipeline{
                         docker build -t $JOB_NAME:v1.$BUILD_ID .
                         docker image tag $JOB_NAME:v1.$BUILD_ID sahar449/java-app:v1.$BUILD_ID
                         docker image tag $JOB_NAME:v1.$BUILD_ID sahar449/java-app:latest
-                     '''
+                    '''
                     }
                 }
             }    
@@ -27,8 +27,9 @@ pipeline{
                 script{ 
                         withCredentials([string(credentialsId: 'docker_hub_login', variable: 'docker_hub')]) {
                             sh '''
-                            docker push sahar449/java-app:v1.$BUILD_ID
-                            docker push sahar449/java-app:latest
+                                docker login -u sahar449 -p ${docker_hub}
+                                docker push sahar449/java-app:v1.$BUILD_ID
+                                docker push sahar449/java-app:latest
                              '''
                         }
                     }
@@ -38,8 +39,8 @@ pipeline{
             steps{
                 script{
                         sh '''
-                        docker pull sahar449/java-app:latest 
-                        docker run -d --name java-app sahar449/java-app:latest
+                            docker pull sahar449/java-app:latest 
+                            docker run -d --name java-app sahar449/java-app:latest
                         '''
                     }
                 }
@@ -53,9 +54,11 @@ pipeline{
             }    
         }
         post {
-		    always {
-			    mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "saharr449@gmail.com";  
-		    }
+            withCredentials([string(credentialsId: 'my_email', variable: 'my_email')]) {
+		        always {
+			        mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "${my_email}";  
+                }
+            }
 	    }
     }
 
