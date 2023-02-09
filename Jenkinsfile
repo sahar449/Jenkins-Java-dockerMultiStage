@@ -7,10 +7,7 @@ pipeline{
         stage('remove old containers and images'){
             steps{
                 script{
-                    sh '''
-                        docker image prune -a
-                        docker container prune --force
-                       '''
+                    sh 'docker container prune --force'
                 }
             }
         }
