@@ -14,7 +14,6 @@ pipeline{
         stage('docker build'){
             steps{
                  script {
-                    
                     sh '''
                         docker build -t $JOB_NAME:v1.$BUILD_ID .
                         docker image tag $JOB_NAME:v1.$BUILD_ID sahar449/java-app:v1.$BUILD_ID
@@ -22,8 +21,7 @@ pipeline{
                      '''
                     }
                 }
-            }
-        }    
+            }    
         stage('docker push to docker-hub'){
             steps{
                 script{ 
@@ -59,5 +57,5 @@ pipeline{
 			    mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "saharr449@gmail.com";  
 		    }
 	    }
-    
+    }
 
