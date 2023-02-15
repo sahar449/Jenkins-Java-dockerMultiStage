@@ -45,13 +45,24 @@ pipeline{
                     }
                 }
             }
-        stage('print docker logs'){
+        // stage('print docker logs'){
+        //     steps{
+        //         script{
+        //             sh 'echo $(docker logs java-app)'
+        //             }
+        //         }
+        //     }
+        stage('deploy to k8s'){
             steps{
                 script{
-                    sh 'echo $(docker logs java-app)'
+                    kubeconfig(serverUrl: '192.168.49.2') {
+                        sh '''
+                          kubectl apply -f dep-service.yml
+                          '''
                     }
                 }
-            }    
+            }
+        }    
         }
         post {
 		    always {
