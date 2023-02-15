@@ -45,31 +45,31 @@ pipeline{
                     }
                 }
             }
-        // stage('print docker logs'){
-        //     steps{
-        //         script{
-        //             sh 'echo $(docker logs java-app)'
-        //             }
-        //         }
-        //     }
-        stage('deploy to k8s'){
+        stage('print docker logs'){
             steps{
                 script{
-                    kubeconfig(serverUrl: '192.168.49.2') {
-                        sh '''
-                          kubectl apply -f dep-service.yml
-                          '''
+                    sh 'echo $(docker logs java-app)'
                     }
                 }
             }
-        }    
-        }
-        // post {
-		//     always {
-        //             withCredentials([string(credentialsId: 'my_email', variable: 'my_email')]) {
-		// 	            mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "${my_email}";  
+        // stage('deploy to k8s'){
+        //     steps{
+        //         script{
+        //             kubeconfig(serverUrl: '192.168.49.2') {
+        //                 sh '''
+        //                   kubectl apply -f dep-service.yml
+        //                   '''
+        //             }
         //         }
         //     }
-	    // }
+        // }    
+        }
+        post {
+		    always {
+                    withCredentials([string(credentialsId: 'my_email', variable: 'my_email')]) {
+		 	            mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "${my_email}";  
+                }
+            }
+	    }
     }
 
