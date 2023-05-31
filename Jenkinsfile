@@ -51,18 +51,7 @@ pipeline{
                     sh 'echo $(docker logs java-app)'
                     }
                 }
-            }
-        // stage('deploy to k8s'){
-        //     steps{
-        //         script{
-        //             kubeconfig(serverUrl: '192.168.49.2') {
-        //                 sh '''
-        //                   kubectl apply -f dep-service.yml
-        //                   '''
-        //             }
-        //         }
-        //     }
-        // }    
+            }   
         }
         post {
 		    always {
